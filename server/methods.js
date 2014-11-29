@@ -1,5 +1,5 @@
 Meteor.methods({
-  getDirection: function(from, to) {
+  getDirection: function (from, to) {
     check(userId, String);
     this.unblock();
     try {
@@ -14,12 +14,12 @@ Meteor.methods({
       return false;
     }
   },
-  getVenues: function(location, query) {
+  getVenues: function (location, query) {
     check(location, Object);
     check(query, String);
     this.unblock();
     try {
-      var result = HTTP.call("GET", "https://api.foursquare.com/v2/venues/search?client_id=" + Meteor.settings.public.foursquare_client_id + "&client_secret=" + Meteor.settings.public.foursquare_client_secret + "&limit=20&radius=400&v=20130815&categoryId=4d4b7105d754a06374d81259&ll=" + location.lat + "," + location.lon);
+      var result = HTTP.call("GET", "https://api.foursquare.com/v2/venues/search?client_id=" + Meteor.settings.keys.foursquare_client_id + "&client_secret=" + Meteor.settings.keys.foursquare_client_secret + "&limit=20&radius=400&v=20130815&categoryId=4d4b7105d754a06374d81259&ll=" + location.lat + "," + location.lon);
       return result;
     } catch (err) {
       return false;
