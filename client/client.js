@@ -2,8 +2,8 @@ var map,
   currentPosition,
   directionsDisplay,
   directionsService,
-  destinationLatitude = 48.8675030,
-  destinationLongitude = 2.3638110,
+  currentLat,
+  currentLng,
   infowindow;
 
 function initializeMapAndCalculateRoute(lat, lon) {
@@ -15,6 +15,9 @@ function initializeMapAndCalculateRoute(lat, lon) {
   currentPosition = new google.maps.LatLng(lat, lon);
 
   infowindow = new google.maps.InfoWindow();
+
+  currentLng = lon;
+  currentLat = lat;
 
   map = new google.maps.Map(document.getElementById('map_canvas'), {
     zoom: 15,
@@ -112,19 +115,11 @@ function initializeMapAndCalculateRoute(lat, lon) {
     title: "Current position"
   });
 
-  var infowindow = new google.maps.InfoWindow();
   google.maps.event.addListener(currentPositionMarker, 'click', function() {
     infowindow.setContent("Current position: latitude: " + lat + " longitude: " + lon);
     infowindow.open(map, currentPositionMarker);
   });
 
-
-
-  // get venues
-  // getVenues({
-  //   lat: lat,
-  //   lon: lon
-  // });
 
   Strangers.find({}).observe({
     added: function(stranger) {
@@ -141,11 +136,17 @@ function initializeMapAndCalculateRoute(lat, lon) {
         title: stranger.user.fullname
       });
       google.maps.event.addListener(strangerMarker, 'click', function(event) {
-        infowindow.setContent(strangerMarker.title);
+        infowindow.setContent("<h1>" + strangerMarker.title + "</h1>");
         infowindow.open(map, strangerMarker);
 
         // calculate Route
         calculateRoute(event.latLng);
+
+        // get venues
+        getVenues({
+          lat: currentLat,
+          lon: currentLng
+        });
       });
     }
   });
@@ -163,10 +164,11 @@ function getVenues(position) {
 
 function addVenues() {
   var venues = Session.get('theVenues'),
-    venue, venuePosition, venueImage = '/img/coffee.png';
+    venueImage = '/img/coffee.png';
   for (var i = 0; i < venues.length; i++) {
-    venuePosition = new google.maps.LatLng(venues[i].location.lat, venues[i].location.lng);
-    venue = new google.maps.Marker({
+    var venuePosition = new google.maps.LatLng(venues[i].location.lat, venues[i].location.lng);
+
+    var venue = new google.maps.Marker({
       position: venuePosition,
       map: map,
       icon: venueImage,
@@ -174,18 +176,15 @@ function addVenues() {
       title: venues[i].name
     });
 
-    function onItemClick(event, pin) {
-      // Create content 
-      var contentString = pin.title;
-
-      // Replace our Info Window's content and position 
-      infowindow.setContent(contentString);
-      infowindow.setPosition(pin.position);
-      infowindow.open(map);
-    }
+    google.maps.event.addListener(venue, 'click', function(event) {
+      console.log(infowindow);
+      // infowindow.setContent(venue.title);
+      // infowindow.open(map, venue);
+    });
   }
 
 };
+
 
 function locError(error) {
   // the current position could not be located
