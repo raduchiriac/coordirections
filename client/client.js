@@ -7,7 +7,9 @@ var map,
   infowindow;
 
 function initializeMapAndCalculateRoute(lat, lon) {
-  directionsDisplay = new google.maps.DirectionsRenderer();
+  directionsDisplay = new google.maps.DirectionsRenderer({
+    suppressMarkers: true
+  });
   directionsService = new google.maps.DirectionsService();
 
   currentPosition = new google.maps.LatLng(lat, lon);
@@ -17,7 +19,83 @@ function initializeMapAndCalculateRoute(lat, lon) {
   map = new google.maps.Map(document.getElementById('map_canvas'), {
     zoom: 15,
     center: currentPosition,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    styles: [{
+      "featureType": "landscape",
+      "stylers": [{
+        "saturation": -100
+      }, {
+        "lightness": 65
+      }, {
+        "visibility": "on"
+      }]
+    }, {
+      "featureType": "poi",
+      "stylers": [{
+        "saturation": -100
+      }, {
+        "lightness": 51
+      }, {
+        "visibility": "simplified"
+      }]
+    }, {
+      "featureType": "road.highway",
+      "stylers": [{
+        "saturation": -100
+      }, {
+        "visibility": "simplified"
+      }]
+    }, {
+      "featureType": "road.arterial",
+      "stylers": [{
+        "saturation": -100
+      }, {
+        "lightness": 30
+      }, {
+        "visibility": "on"
+      }]
+    }, {
+      "featureType": "road.local",
+      "stylers": [{
+        "saturation": -100
+      }, {
+        "lightness": 40
+      }, {
+        "visibility": "on"
+      }]
+    }, {
+      "featureType": "transit",
+      "stylers": [{
+        "saturation": -100
+      }, {
+        "visibility": "simplified"
+      }]
+    }, {
+      "featureType": "administrative.province",
+      "stylers": [{
+        "visibility": "off"
+      }]
+    }, {
+      "featureType": "water",
+      "elementType": "labels",
+      "stylers": [{
+        "visibility": "on"
+      }, {
+        "lightness": -25
+      }, {
+        "saturation": -100
+      }]
+    }, {
+      "featureType": "water",
+      "elementType": "geometry",
+      "stylers": [{
+        "hue": "#ffff00"
+      }, {
+        "lightness": -25
+      }, {
+        "saturation": -97
+      }]
+    }]
   });
 
   directionsDisplay.setMap(map);
@@ -25,30 +103,57 @@ function initializeMapAndCalculateRoute(lat, lon) {
   var currentPositionMarker = new google.maps.Marker({
     position: currentPosition,
     map: map,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      // fillColor: 'red',
+      strokeColor: 'red',
+      scale: 10
+    },
     title: "Current position"
   });
 
-  // current position marker info
-  /*
-                var infowindow = new google.maps.InfoWindow();
-                google.maps.event.addListener(currentPositionMarker, 'click', function() {
-                    infowindow.setContent("Current position: latitude: " + lat +" longitude: " + lon);
-                    infowindow.open(map, currentPositionMarker);
-                });
-                */
+  var infowindow = new google.maps.InfoWindow();
+  google.maps.event.addListener(currentPositionMarker, 'click', function() {
+    infowindow.setContent("Current position: latitude: " + lat + " longitude: " + lon);
+    infowindow.open(map, currentPositionMarker);
+  });
 
-  // calculate Route
-  calculateRoute();
+
 
   // get venues
-  getVenues({
-    lat: lat,
-    lon: lon
+  // getVenues({
+  //   lat: lat,
+  //   lon: lon
+  // });
+
+  Strangers.find({}).observe({
+    added: function(stranger) {
+      var strangerPosition = new google.maps.LatLng(stranger.coordinates.lat, stranger.coordinates.lng);
+
+      var strangerMarker = new google.maps.Marker({
+        position: strangerPosition,
+        map: map,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 10
+        },
+        animation: google.maps.Animation.DROP,
+        title: stranger.user.fullname
+      });
+      google.maps.event.addListener(strangerMarker, 'click', function(event) {
+        infowindow.setContent(strangerMarker.title);
+        infowindow.open(map, strangerMarker);
+
+        // calculate Route
+        calculateRoute(event.latLng);
+      });
+    }
   });
 }
 
 function getVenues(position) {
-  Session.set('interest', 'bar');
+  // foursquare-id for Food
+  Session.set('interest', '4d4b7105d754a06374d81259');
 
   Meteor.call('getVenues', position, Session.get('interest'), function(err, result) {
     Session.set('theVenues', JSON.parse(result.content).response.venues);
@@ -67,11 +172,6 @@ function addVenues() {
       icon: venueImage,
       animation: google.maps.Animation.DROP,
       title: venues[i].name
-    });
-    google.maps.event.addListener(venue, 'click', function(event) {
-      //map.setCenter(new google.maps.LatLng(venue.position.lat(), venue.position.lng()));
-      //map.setZoom(18);
-      //onItemClick(event, venue);
     });
 
     function onItemClick(event, pin) {
@@ -96,9 +196,7 @@ function locSuccess(position) {
   initializeMapAndCalculateRoute(position.coords.latitude, position.coords.longitude);
 }
 
-function calculateRoute() {
-
-  var targetDestination = new google.maps.LatLng(destinationLatitude, destinationLongitude);
+function calculateRoute(targetDestination) {
   if (currentPosition != '' && targetDestination != '') {
 
     var request = {
@@ -112,25 +210,42 @@ function calculateRoute() {
         directionsDisplay.setPanel(document.getElementById("directions"));
         directionsDisplay.setDirections(response);
 
+        $('.navigation .btn').show();
+
         /*
                                 var myRoute = response.routes[0].legs[0];
                                 for (var i = 0; i < myRoute.steps.length; i++) {
                                     alert(myRoute.steps[i].instructions);
                                 }
                             */
-        $("#results").show();
+        // $("#results").show();
       } else {
-        $("#results").hide();
+        // $("#results").hide();
       }
     });
   } else {
-    $("#results").hide();
+    // $("#results").hide();
   }
 }
+
+Template.map.created = function() {
+
+}
+
+Template.map.events({
+  'click .btn': function(event, template) {
+    event.preventDefault();
+    $('#map_canvas').toggleClass('open');
+    $('#results').toggleClass('open');
+  }
+});
+
 
 Template.map.rendered = function() {
   // find current position and on success initialize map and calculate the route
   navigator.geolocation.getCurrentPosition(locSuccess, locError);
+
+
 };
 
 Template.venues.helpers({
