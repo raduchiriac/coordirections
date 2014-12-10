@@ -8,4 +8,11 @@ less
 http
 underscore
 anti:fake
+iron:router
+mquandalle:jade
+accounts-base
+accounts-ui-unstyled
+accounts-password
+manuelschoebel:wait-on-lib
+mizzao:user-status
 

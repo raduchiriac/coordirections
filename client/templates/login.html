@@ -1,0 +1,10 @@
+<template name="login">
+<div class="login">
+{{> loginButtons}}
+{{#if currentUser}}
+hello {{currentUser.username}}
+{{else}}
+please login above
+{{/if}}
+</div>
+</template>

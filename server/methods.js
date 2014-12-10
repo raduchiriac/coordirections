@@ -1,19 +1,4 @@
 Meteor.methods({
-  getDirection: function(from, to) {
-    check(userId, String);
-    this.unblock();
-    try {
-      var result = HTTP.call("GET", "https://maps.googleapis.com/maps/api/directions/json?origin=48+Pirrama+Rd,+Pyrmont,+NSW,+Australia&destination=122+Flinders+St,+Darlinghurst,+NSW,+Australia&sensor=false&key=AIzaSyDvXUfaNi0PjWstw868TSYWbSGFDb9FOns", {
-        params: {
-          user: userId
-        }
-      });
-      return result;
-    } catch (e) {
-      // Got a network error, time-out or HTTP error in the 400 or 500 range.
-      return false;
-    }
-  },
   getVenues: function(location, categoryId) {
     check(location, Object);
     check(categoryId, String);
@@ -27,5 +12,21 @@ Meteor.methods({
   },
   randomIntFromInterval: function(min, max) {
     return Math.random() * (max - min) + min;
+  },
+  addStranger: function(lng, lat, user) {
+    return Strangers.insert({
+      coordinates: {
+        lng: lng,
+        lat: lat
+      },
+      user: user
+    });
+  },
+  updateUser: function(position) {
+    return Meteor.users.update(Meteor.user()._id, {
+      $set: {
+        position: position
+      }
+    });
   }
 });
