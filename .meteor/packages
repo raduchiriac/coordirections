@@ -15,4 +15,6 @@ accounts-ui-unstyled
 accounts-password
 manuelschoebel:wait-on-lib
 mizzao:user-status
+msavin:mongoinspector
+aldeed:collection2
 

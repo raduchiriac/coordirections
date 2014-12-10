@@ -20,31 +20,72 @@ gmaps = {
   // define current marker
   currentMarker: null,
 
+  calculateRoute: function(position) {
+    var request = {
+      origin: this.currentMarker.position,
+      destination: position,
+      travelMode: google.maps.DirectionsTravelMode["WALKING"]
+    };
+
+    this.directionsService.route(request, function(response, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+        this.gmaps.directionsDisplay.setPanel(document.getElementById("directions"));
+        this.gmaps.directionsDisplay.setDirections(response);
+
+        $('.navigation .btn').show();
+      } else {}
+    });
+  },
+
   // add a marker given our formatted marker data object
   addMarker: function(marker) {
     var gLatLng = new google.maps.LatLng(marker.lat, marker.lng);
+    var markerIcon = marker.icon || {
+      path: google.maps.SymbolPath.CIRCLE,
+      strokeColor: 'darkblue',
+      scale: 10
+    };
     var gMarker = new google.maps.Marker({
       position: gLatLng,
       map: this.map,
       title: marker.title,
       // animation: google.maps.Animation.DROP,
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        strokeColor: 'darkblue',
-        scale: 10
-      },
+      icon: markerIcon,
     });
-    console.log(marker._id);
-    this.latLngs.push(gLatLng);
+
+    // this.latLngs.push(gLatLng);
     this.markers.push({
       marker: gMarker,
       _id: marker._id
     });
 
+    google.maps.event.addListener(gMarker, 'click', function(event) {
+      if (gmaps.currentMarker != this) {
+        gmaps.calculateRoute(this.position);
+        venues.getVenues(this.position);
+      }
+    });
+
     return gMarker;
   },
 
+  changeMarker: function(id, position) {
+    var index = _.indexOf(_.pluck(this.markers, '_id'), id);
+    var gLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    try {
+      this.markers[index].marker.setPosition(gLatLng);
+    } catch (err) {
+      console.log(err.message);
+    }
+  },
+
   removeMarker: function(id) {
+    var index = _.indexOf(_.pluck(this.markers, '_id'), id);
+    var markerToDelete = this.markers[index].marker;
+
+    markerToDelete.setMap(null);
+    delete this.markers[index];
+
     return true;
   },
 
@@ -73,7 +114,6 @@ gmaps = {
       //this.gmaps.map.setCenter(newLatlng);
       this.gmaps.markerAccuracy.setCenter(newLatlng);
       this.gmaps.markerAccuracy.setRadius(parseInt(position.coords.accuracy, 10));
-
 
       Meteor.call('updateUser', position);
     } catch (err) {
@@ -182,8 +222,6 @@ gmaps = {
       suppressMarkers: true
     });
     this.directionsDisplay.setMap(this.map);
-
-    console.log(position.coords.accuracy, '> init, accuracy');
 
     this.markerAccuracy = new google.maps.Circle({
       center: currentPosition,
