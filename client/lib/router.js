@@ -15,15 +15,18 @@ Router.onBeforeAction(function() {
 Router.map(function() {
   this.route('map', {
     path: '/',
-    // waitOn: function() {
-    //   return [IRLibLoader.load('http://maps.google.com/maps/api/js?v=3&sensor=false&language=en')]
-    // },
     before: [],
-    data: function() {
-      return Strangers.findOne();
+    data: {
     }
   });
   this.route('login', {
-    path: '/login'
+    path: '/login',
+    onBeforeAction: function() {
+      if(Meteor.userId()){
+        this.redirect('/');
+      } else {
+        this.next();
+      }
+    }
   })
 })

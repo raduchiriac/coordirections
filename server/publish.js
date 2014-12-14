@@ -1,7 +1,3 @@
-Meteor.publish('mongoStrangers', function() {
-  return Strangers.find({});
-});
-
 Meteor.publish("mongoUsersOnline", function() {
   return Meteor.users.find({
     "status.online": true,
@@ -13,4 +9,8 @@ Meteor.publish("mongoUsersOnline", function() {
       'position.coords.longitude': 1
     }
   });
+});
+
+Meteor.publish("mongoConnectionsTowardsMe", function(){
+  return Connections.find();
 });

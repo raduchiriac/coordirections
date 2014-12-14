@@ -7,12 +7,12 @@ body, p {
 	height:100%;
 	top:0;left:0;
 	position:absolute;
-transition:all 0.2s ease-in;
+	transition:all 0.2s ease-in;
+	&.open {
+		left:-50%;
+	}
 }
-#map_canvas.open {
-	left:-50%;
-}
-#results{
+.results {
 	position: absolute;
 	background: white;
 	bottom: 0;
@@ -21,23 +21,25 @@ transition:all 0.2s ease-in;
 	right: -50%;
 	transition:all 0.2s ease-in;
 	#directions {
-	padding:1em;
+		padding:1em;
+	}
+	&.open {
+		right:0;
 	}
 }
-#results.open {
-	right:0;
-}
-.navigation .btn {
-	position: absolute;
-top: 30px;
-right: 8px;
-z-index: 99;
-padding: 0.5em 1em;
-background: gray;
-border-radius: 6px;
-color: white;
-text-decoration:none;
-display:none;
+.navigation {
+	.btn {
+		position: absolute;
+		top: 30px;
+		right: 8px;
+		z-index: 99;
+		padding: 0.5em 1em;
+		background: gray;
+		border-radius: 6px;
+		color: white;
+		text-decoration:none;
+		display:none;
+	}
 }
 .login{
 	position:absolute;

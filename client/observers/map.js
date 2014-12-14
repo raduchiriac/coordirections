@@ -9,7 +9,7 @@ function locationSuccess(position) {
 
   Meteor.users.find({
     "_id": {
-      $ne: Meteor.user()._id
+      $ne: Meteor.userId()
     }
   }).observe({
     added: function(user) {
@@ -17,6 +17,8 @@ function locationSuccess(position) {
       gmaps.addMarker({
         lat: user.position.coords.latitude,
         lng: user.position.coords.longitude,
+        title: user.username,
+        username: user.username,
         _id: user._id
       });
     },
@@ -41,14 +43,14 @@ Template.map.events({
   'click .btn': function(event, template) {
     event.preventDefault();
     $('#map_canvas').toggleClass('open');
-    $('#results').toggleClass('open');
+    $('.results').toggleClass('open');
   }
 });
 
 Template.map.rendered = function() {
   var script = document.createElement('script');
   script.type = 'text/javascript';
-  script.src = '//maps.google.com/maps/api/js?v=3&sensor=false&language=en&callback=googleMapsLoaded';
+  script.src = '//maps.google.com/maps/api/js?callback=googleMapsLoaded';
   document.body.appendChild(script);
 };
 

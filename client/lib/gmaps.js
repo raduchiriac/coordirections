@@ -20,7 +20,14 @@ gmaps = {
   // define current marker
   currentMarker: null,
 
-  calculateRoute: function(position) {
+  calculateRoute: function(position, callback) {
+    this.directionsService = new google.maps.DirectionsService();
+    this.directionsDisplay = new google.maps.DirectionsRenderer({
+      suppressMarkers: true
+    });
+
+    this.directionsDisplay.setMap(this.map);
+
     var request = {
       origin: this.currentMarker.position,
       destination: position,
@@ -35,11 +42,24 @@ gmaps = {
         $('.navigation .btn').show();
       } else {}
     });
+
+    try {
+      callback();
+    } catch (err) {}
+  },
+
+  insertConnection: function() {
+    log = Connections.insert({
+      timestamp: new Date().getTime(),
+      to: Session.get('strangerTo'),
+      from: Meteor.userId(),
+      fromPosition: gmaps.currentMarker.position
+    });
   },
 
   // add a marker given our formatted marker data object
   addMarker: function(marker) {
-    var gLatLng = new google.maps.LatLng(marker.lat, marker.lng);
+    var gLatLng = new google.maps.LatLng(parseFloat(marker.lat), parseFloat(marker.lng));
     var markerIcon = marker.icon || {
       path: google.maps.SymbolPath.CIRCLE,
       strokeColor: 'darkblue',
@@ -51,6 +71,10 @@ gmaps = {
       title: marker.title,
       // animation: google.maps.Animation.DROP,
       icon: markerIcon,
+      member: {
+        username: marker.username,
+        _id: marker._id
+      }
     });
 
     // this.latLngs.push(gLatLng);
@@ -61,7 +85,8 @@ gmaps = {
 
     google.maps.event.addListener(gMarker, 'click', function(event) {
       if (gmaps.currentMarker != this) {
-        gmaps.calculateRoute(this.position);
+        Session.set('strangerTo', this.member._id);
+        gmaps.calculateRoute(this.position, gmaps.insertConnection);
         venues.getVenues(this.position);
       }
     });
@@ -71,11 +96,11 @@ gmaps = {
 
   changeMarker: function(id, position) {
     var index = _.indexOf(_.pluck(this.markers, '_id'), id);
-    var gLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    var gLatLng = new google.maps.LatLng(parseFloat(position.coords.latitude), parseFloat(position.coords.longitude));
     try {
       this.markers[index].marker.setPosition(gLatLng);
     } catch (err) {
-      console.log(err.message);
+      console.log(err.message, '> change');
     }
   },
 
@@ -113,11 +138,17 @@ gmaps = {
       this.gmaps.currentMarker.setPosition(newLatlng);
       //this.gmaps.map.setCenter(newLatlng);
       this.gmaps.markerAccuracy.setCenter(newLatlng);
-      this.gmaps.markerAccuracy.setRadius(parseInt(position.coords.accuracy, 10));
-
-      Meteor.call('updateUser', position);
+      this.gmaps.markerAccuracy.setRadius(parseInt(position.coords.accuracy));
+      position = {
+        coords: {
+          accuracy: position.coords.accuracy.toString(),
+          latitude: position.coords.latitude.toString(),
+          longitude: position.coords.longitude.toString()
+        }
+      };
+      Meteor.call('updateUsersPosition', position);
     } catch (err) {
-      console.log(err.message);
+      console.log(err.message, '> update');
     }
   },
 
@@ -217,12 +248,6 @@ gmaps = {
       mapOptions
     );
 
-    this.directionsService = new google.maps.DirectionsService();
-    this.directionsDisplay = new google.maps.DirectionsRenderer({
-      suppressMarkers: true
-    });
-    this.directionsDisplay.setMap(this.map);
-
     this.markerAccuracy = new google.maps.Circle({
       center: currentPosition,
       radius: position.coords.accuracy,
@@ -236,10 +261,19 @@ gmaps = {
     this.currentMarker = this.addMarker({
       lat: position.coords.latitude,
       lng: position.coords.longitude,
-      _id: Meteor.user()._id
+      _id: Meteor.userId()
     });
 
-    Meteor.call('updateUser', position);
+    position = {
+      coords: {
+        accuracy: position.coords.accuracy.toString(),
+        latitude: position.coords.latitude.toString(),
+        longitude: position.coords.longitude.toString()
+      }
+    };
+
+    Meteor.call('updateUsersPosition', position);
+    Meteor.call('removeAllMyPreviousRoutes', Meteor.userId());
 
     // Observe position changements
     try {

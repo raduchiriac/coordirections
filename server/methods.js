@@ -14,20 +14,15 @@ Meteor.methods({
   randomIntFromInterval: function(min, max) {
     return Math.random() * (max - min) + min;
   },
-  addStranger: function(lng, lat, user) {
-    return Strangers.insert({
-      coordinates: {
-        lng: lng,
-        lat: lat
-      },
-      user: user
-    });
-  },
-  updateUser: function(position) {
-    return Meteor.users.update(Meteor.user()._id, {
+  updateUsersPosition: function(position) {
+    check(position.coords, Object);
+    return Meteor.users.update({_id: Meteor.userId()}, {
       $set: {
         position: position
       }
     });
+  },
+  removeAllMyPreviousRoutes: function(id){
+    Connections.remove({from:id});
   }
 });
