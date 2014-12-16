@@ -40,7 +40,7 @@ window.googleMapsLoaded = function() {
 }
 
 Template.map.events({
-  'click .btn': function(event, template) {
+  'click .meet': function(event, template) {
     event.preventDefault();
     $('#map_canvas').toggleClass('open');
     $('.results').toggleClass('open');

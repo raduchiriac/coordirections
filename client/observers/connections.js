@@ -9,12 +9,21 @@ Meteor.startup(function() {
       return true;
     },
     changed: function(newDocument, oldDocument) {
-      console.log(newDocument.route, '> proposed a new route');
+      console.log(newDocument, '> proposed a new route');
       return true;
     },
-    removed: function(oldDocument) {
-      console.log(newDocument.route, '> removed route');
+    removed: function(document) {
+      // console.log(document, '> removed route');
+      gmaps.removeRoute()
       return true;
+    }
+  });
+
+  Connections.find({
+    "from": Meteor.userId()
+  }).observe({
+    removedAt: function(oldDocument, atIndex) {
+      gmaps.removeRoute(oldDocument.toUsername);
     }
   });
 });

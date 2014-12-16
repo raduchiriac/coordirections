@@ -10,19 +10,5 @@ Meteor.methods({
       console.log(err.message);
       return false;
     }
-  },
-  randomIntFromInterval: function(min, max) {
-    return Math.random() * (max - min) + min;
-  },
-  updateUsersPosition: function(position) {
-    check(position.coords, Object);
-    return Meteor.users.update({_id: Meteor.userId()}, {
-      $set: {
-        position: position
-      }
-    });
-  },
-  removeAllMyPreviousRoutes: function(id){
-    Connections.remove({from:id});
   }
-});
+})

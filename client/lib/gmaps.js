@@ -39,7 +39,7 @@ gmaps = {
         this.gmaps.directionsDisplay.setPanel(document.getElementById("directions"));
         this.gmaps.directionsDisplay.setDirections(response);
 
-        $('.navigation .btn').show();
+        $('.navigation .meet').show();
       } else {}
     });
 
@@ -48,13 +48,27 @@ gmaps = {
     } catch (err) {}
   },
 
+  removeRoute: function(username) {
+    this.directionsDisplay.setMap(null);
+    $('.navigation .meet').hide();
+
+    if (!!username) {
+      swal(username + " did not accept", "Try someone else", "error");
+    }
+  },
+
   insertConnection: function() {
-    log = Connections.insert({
-      timestamp: new Date().getTime(),
+    var fromPosition = gmaps.currentMarker.getPosition();
+    Meteor.call('proposeANewConnection', {
       to: Session.get('strangerTo'),
+      toUsername: Session.get('strangerToUsername'),
       from: Meteor.userId(),
-      fromPosition: gmaps.currentMarker.position
-    });
+      fromUsername: Meteor.user().username,
+      fromPosition: {
+        lat: fromPosition.lat(),
+        lng: fromPosition.lng()
+      }
+    })
   },
 
   // add a marker given our formatted marker data object
@@ -86,6 +100,7 @@ gmaps = {
     google.maps.event.addListener(gMarker, 'click', function(event) {
       if (gmaps.currentMarker != this) {
         Session.set('strangerTo', this.member._id);
+        Session.set('strangerToUsername', this.member.username);
         gmaps.calculateRoute(this.position, gmaps.insertConnection);
         venues.getVenues(this.position);
       }
