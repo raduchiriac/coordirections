@@ -1,0 +1,10 @@
+core-header-panel
+  core-toolbar
+    paper-tabs(id="tabs", selected="meet", self-end, link)
+      paper-tab(name="meet")
+        a(href='/', horizontal center-center layout)
+          | Meet
+      paper-tab(name="friends")
+        a(href='/friends', horizontal center-center layout)
+          | Friends
+  +yield

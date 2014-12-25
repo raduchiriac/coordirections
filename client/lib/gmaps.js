@@ -20,6 +20,15 @@ gmaps = {
   // define current marker
   currentMarker: null,
 
+  // icons that are active should look this this
+  defaultActiveIcon: null,
+
+  // icons that are active should look this this
+  defaultIdleIcon: null,
+
+  // bounds of your map
+  mapBounds: null,
+
   calculateRoute: function(position, callback) {
     this.directionsService = new google.maps.DirectionsService();
     this.directionsDisplay = new google.maps.DirectionsRenderer({
@@ -74,11 +83,7 @@ gmaps = {
   // add a marker given our formatted marker data object
   addMarker: function(marker) {
     var gLatLng = new google.maps.LatLng(parseFloat(marker.lat), parseFloat(marker.lng));
-    var markerIcon = marker.icon || {
-      path: google.maps.SymbolPath.CIRCLE,
-      strokeColor: 'darkblue',
-      scale: 10
-    };
+    var markerIcon = marker.icon || this.defaultActiveIcon;
     var gMarker = new google.maps.Marker({
       position: gLatLng,
       map: this.map,
@@ -117,6 +122,12 @@ gmaps = {
     } catch (err) {
       console.log(err.message, '> change');
     }
+  },
+
+  toggleStatus: function(id, idle) {
+    var index = _.indexOf(_.pluck(this.markers, '_id'), id);
+    var theMarker = this.markers[index].marker;
+    theMarker.setIcon(!!idle ? this.defaultIdleIcon : this.defaultActiveIcon);
   },
 
   removeMarker: function(id) {
@@ -169,6 +180,16 @@ gmaps = {
 
   // intialize the map
   initialize: function(position) {
+    gmaps.defaultActiveIcon = {
+      path: google.maps.SymbolPath.CIRCLE,
+      strokeColor: 'darkblue',
+      scale: 10
+    };
+    gmaps.defaultIdleIcon = {
+      path: google.maps.SymbolPath.CIRCLE,
+      strokeColor: 'black',
+      scale: 10
+    };
     var currentPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     var mapOptions = {
       zoom: 16,
@@ -263,11 +284,19 @@ gmaps = {
       mapOptions
     );
 
+    var mapupdater = null;
+    google.maps.event.addListener(this.map, 'bounds_changed', function() {
+      clearTimeout(mapupdater);
+      mapupdater = setTimeout(function() {
+        gmaps.mapBounds = gmaps.map.getBounds();
+      }, 100);
+    });
+
     this.markerAccuracy = new google.maps.Circle({
       center: currentPosition,
       radius: position.coords.accuracy,
-      fillColor: "#c4d4e4",
-      fillOpacity: 0.5,
+      fillColor: "#00008B",
+      fillOpacity: 0.1,
       strokeOpacity: 0,
       strokeWeight: 0,
       map: this.map

@@ -23,8 +23,8 @@ function locationSuccess(position) {
       });
     },
     changed: function(user, fields) {
-      // console.log(user.position, user._id, '> just changed');
       gmaps.changeMarker(user._id, user.position);
+      gmaps.toggleStatus(user._id, user.status.idle);
     },
     removed: function(user, fields) {
       // console.log(user._id, '> just went offline');
@@ -45,6 +45,17 @@ Template.map.events({
     $('#map_canvas').toggleClass('open');
     $('.results').toggleClass('open');
   }
+});
+
+Deps.autorun(function(c) {
+  try {
+    UserStatus.startMonitor({
+      threshold: 30000,
+      idleOnBlur: true
+    });
+
+    c.stop();
+  } catch (ignore) {}
 });
 
 Template.map.rendered = function() {

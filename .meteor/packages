@@ -4,7 +4,6 @@
 # but you can also edit it by hand.
 
 meteor-platform
-less
 http
 underscore
 anti:fake
@@ -17,4 +16,10 @@ manuelschoebel:wait-on-lib
 mizzao:user-status
 msavin:mongoinspector
 aldeed:collection2
+less
+multiply:iron-router-progress
 
+meteorhacks:subs-manager
+alanning:roles
+matb33:collection-hooks
+reywood:publish-composite

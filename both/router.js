@@ -16,17 +16,25 @@ Router.map(function() {
   this.route('map', {
     path: '/',
     before: [],
-    data: {
-    }
+    data: {}
   });
+  this.route('friends', {
+    path: '/friends',
+    before: [],
+    data: {
+      myFriends: function() {
+        return Friends.find();
+      }
+    }
+  })
   this.route('login', {
     path: '/login',
     onBeforeAction: function() {
-      if(Meteor.userId()){
+      if (Meteor.userId()) {
         this.redirect('/');
       } else {
         this.next();
       }
     }
   })
-})
+});

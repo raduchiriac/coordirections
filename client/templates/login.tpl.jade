@@ -1,0 +1,8 @@
+.login
+  if currentUser
+    | hello
+    strong
+      currentUser.username
+  else
+    +loginButtons
+    | please login above

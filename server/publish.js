@@ -11,6 +11,12 @@ Meteor.publish("mongoUsersOnline", function() {
   });
 });
 
-Meteor.publish("mongoConnectionsTowardsMe", function(){
+Meteor.publish("mongoConnectionsTowardsMe", function() {
   return Connections.find();
+});
+
+Meteor.publish("mongoMyFriends", function() {
+  return Friends.find({
+    _id: this.userId
+  });
 });
