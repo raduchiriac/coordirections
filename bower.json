@@ -5,7 +5,7 @@
   "authors": [
     "Radu Chiriac <contact@raduchiriac.me>"
   ],
-  "description": "have a coffee halfway",
+  "description": "Have a coffee with a stranger",
   "main": "both.js",
   "keywords": [
     "meteor"
@@ -15,16 +15,10 @@
   "ignore": [
     "**/.*",
     "node_modules",
+    "public/js/vendor"
     "bower_components",
     "test",
     "tests"
   ],
-  "dependencies": {
-    "polymer": "Polymer/polymer#~0.5.2",
-    "core-header-panel": "Polymer/core-header-panel#~0.5.2",
-    "core-toolbar": "Polymer/core-toolbar#~0.5.2",
-    "paper-tabs": "Polymer/paper-tabs#~0.5.2",
-    "sweetalert": "~0.3.2",
-    "paper-button": "Polymer/paper-button#~0.5.2"
-  }
+  "dependencies": {}
 }

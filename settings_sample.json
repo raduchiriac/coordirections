@@ -1,6 +1,12 @@
 {
+  "public": {
+    "mapbox_public_token": "",
+    "mapbox_map_id": ""
+  },
   "keys": {
     "foursquare_client_id": "",
-    "foursquare_client_secret": ""
+    "foursquare_client_secret": "",
+
+    "mapbox_secret_token": ""
   }
 }

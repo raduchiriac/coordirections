@@ -1,3 +1,4 @@
+/*
 function locationError(error) {
   // the current position could not be located
   console.log(error, 'error getting your location');
@@ -68,3 +69,4 @@ Template.map.rendered = function() {
 Accounts.ui.config({
   passwordSignupFields: "USERNAME_ONLY"
 });
+*/
