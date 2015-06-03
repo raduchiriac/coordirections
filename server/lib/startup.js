@@ -1,7 +1,9 @@
 Meteor.startup(function () {
-  if (Meteor.isServer) {
-    if (Object.keys(Meteor.settings).length === 0) {
-      console.log("You forgot to run Meteor with --settings!");
-    }
+  if (Object.keys(Meteor.settings).length === 0) {
+    console.log("You forgot to run Meteor with --settings!");
   }
 });
+
+randomFromInterval = function (min, max) {
+  return Math.random() * (max - min) + min;
+}

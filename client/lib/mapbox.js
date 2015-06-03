@@ -2,8 +2,12 @@ mapbox = {
   // map object
   map: null,
 
-  // google markers objects
+  // mapbox markers objects
   markers: [],
+
+  // observer that watches for collection changes.
+  // user observer.stop() to stop the Tracker
+  observer: null,
 
   // google lat lng objects
   // latLngs: [],
@@ -81,40 +85,6 @@ mapbox = {
     })
   },
 
-  // add a marker given our formatted marker data object
-  addMarker: function (marker) {
-    var gLatLng = new google.maps.LatLng(parseFloat(marker.lat), parseFloat(marker.lng));
-    var markerIcon = marker.icon || this.defaultActiveIcon;
-    var gMarker = new google.maps.Marker({
-      position: gLatLng,
-      map: this.map,
-      title: marker.title,
-      // animation: google.maps.Animation.DROP,
-      icon: markerIcon,
-      member: {
-        username: marker.username,
-        _id: marker._id
-      }
-    });
-
-    // this.latLngs.push(gLatLng);
-    this.markers.push({
-      marker: gMarker,
-      _id: marker._id
-    });
-
-    google.maps.event.addListener(gMarker, 'click', function (event) {
-      if (gmaps.currentMarker != this) {
-        Session.set('strangerTo', this.member._id);
-        Session.set('strangerToUsername', this.member.username);
-        gmaps.calculateRoute(this.position, gmaps.insertConnection);
-        venues.getVenues(this.position);
-      }
-    });
-
-    return gMarker;
-  },
-
   changeMarker: function (id, position) {
     var index = _.indexOf(_.pluck(this.markers, '_id'), id);
     var gLatLng = new google.maps.LatLng(parseFloat(position.coords.latitude), parseFloat(position.coords.longitude));
@@ -179,8 +149,48 @@ mapbox = {
     }
   },*/
 
+  // add a marker
+  addMarker: function (document) {
+    // var gLatLng = new google.maps.LatLng(parseFloat(marker.lat), parseFloat(marker.lng));
+    // var markerIcon = marker.icon || this.defaultActiveIcon;
+    // var gMarker = new google.maps.Marker({
+    //   position: gLatLng,
+    //   map: this.map,
+    //   title: marker.title,
+    //   // animation: google.maps.Animation.DROP,
+    //   icon: markerIcon,
+    //   member: {
+    //     username: marker.username,
+    //     _id: marker._id
+    //   }
+    // });
+
+    // // this.latLngs.push(gLatLng);
+    // this.markers.push({
+    //   marker: gMarker,
+    //   _id: marker._id
+    // });
+
+    // google.maps.event.addListener(gMarker, 'click', function (event) {
+    //   if (gmaps.currentMarker != this) {
+    //     Session.set('strangerTo', this.member._id);
+    //     Session.set('strangerToUsername', this.member.username);
+    //     gmaps.calculateRoute(this.position, gmaps.insertConnection);
+    //     venues.getVenues(this.position);
+    //   }
+    // });
+
+    var marker = L.marker(document.coordinates, {
+      title: Coordinates.findOne({
+        _id: document._id
+      }).user().username
+    }).addTo(this.map);
+
+    return marker;
+  },
+
   // intialize the map
-  initialize: function (position) {
+  initialize: function () {
     L.mapbox.accessToken = Meteor.settings.public.mapbox_public_token;
     this.map = L.mapbox.map("map", Meteor.settings.public.mapbox_map_id);
 
@@ -188,7 +198,7 @@ mapbox = {
 
     this.map.locate();
     this.map.on('locationfound', function (e) {
-      //TODO: update users position with e
+      //TODO: update users position with [e]
       mapbox.markers.setGeoJSON({
         type: 'Feature',
         geometry: {
@@ -207,7 +217,29 @@ mapbox = {
       console.log('> Position could not be found');
     });
 
+    this.observe();
     Session.set('mapbox', true);
     return true;
+  },
+
+  observe: function () {
+    var coordinatesQuery = Coordinates.find({
+      "userId": {
+        $ne: Meteor.userId()
+      }
+    })
+    this.observer = coordinatesQuery.observe({
+      added: function (document) {
+        // console.log(document, '> just came online');
+        mapbox.addMarker(document);
+      },
+      changed: function (newDocument, oldDocument) {
+        // CALL CHANGE POSITION
+      },
+      removed: function (oldDocument) {
+        // console.log(oldDocument, '> just went offline');
+        // CALL REMOVE
+      }
+    });
   }
 }
