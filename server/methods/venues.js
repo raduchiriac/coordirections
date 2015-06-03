@@ -1,5 +1,5 @@
 // Meteor.methods({
-//   getVenues: function(location, categoryId) {
+//   getVenues: function (location, categoryId) {
 //     check(location, Object);
 //     check(categoryId, String);
 //     this.unblock();

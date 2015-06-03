@@ -1,5 +1,5 @@
 // Meteor.methods({
-//   updateUsersPosition: function(position) {
+//   updateUsersPosition: function (position) {
 //     check(position.coords, Object);
 //     return Meteor.users.update({
 //       _id: Meteor.userId()

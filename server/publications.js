@@ -1,4 +1,4 @@
-// Meteor.publish("mongoUsersOnline", function() {
+// Meteor.publish("mongoUsersOnline", function () {
 //   return Meteor.users.find({
 //     "status.online": true,
 //   }, {
@@ -11,12 +11,20 @@
 //   });
 // });
 
-// Meteor.publish("mongoConnectionsTowardsMe", function() {
+// Meteor.publish("mongoConnectionsTowardsMe", function () {
 //   return Connections.find();
 // });
 
-// Meteor.publish("mongoMyFriends", function() {
-//   return Friends.find({
-//     _id: this.userId
-//   });
-// });
+Meteor.publishComposite('usersInBounds', {
+  find: function () {
+    return Coordinates.find({});
+  },
+  children: [{
+    find: function (coordinate) {
+      var oneUser = Meteor.users.find({
+        _id: coordinate.userId
+      });
+      return oneUser;
+    }
+  }]
+});

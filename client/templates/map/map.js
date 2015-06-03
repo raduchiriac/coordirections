@@ -3,38 +3,49 @@ Template.map.onRendered(function () {
 
   Tracker.autorun(function () {
     if (Mapbox.loaded()) {
-
-      console.log('> mapbox loaded');
-      L.mapbox.accessToken = Meteor.settings.public.mapbox_public_token;
-      var map = L.mapbox.map("map", Meteor.settings.public.mapbox_map_id);
-
-      var myLayer = L.mapbox.featureLayer().addTo(map);
-      map.locate();
-
-      map.on('locationfound', function (e) {
-        // map.fitBounds(e.bounds);
-
-        myLayer.setGeoJSON({
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [e.latlng.lng, e.latlng.lat]
-          },
-          properties: {
-            'title': 'Here I am!',
-            'marker-color': '#ff8888',
-            'marker-symbol': 'star'
-          }
-        });
-        map.setView([e.latitude, e.longitude], 13);
-
-      });
-
-      // If the user chooses not to allow their location
-      // to be shared, display an error message.
-      map.on('locationerror', function () {
-        geolocate.innerHTML = 'Position could not be found';
-      });
+      mapbox.initialize();
     }
   });
 });
+
+
+/*
+function locationSuccess(position) {
+  // initialize map with current position and calculate the route
+  gmaps.initialize(position);
+
+  Meteor.users.find({
+    "_id": {
+      $ne: Meteor.userId()
+    }
+  }).observe({
+    added: function(user) {
+      // console.log(user, '> just came online');
+      gmaps.addMarker({
+        lat: user.position.coords.latitude,
+        lng: user.position.coords.longitude,
+        title: user.username,
+        username: user.username,
+        _id: user._id
+      });
+    },
+    changed: function(user, fields) {
+      gmaps.changeMarker(user._id, user.position);
+      gmaps.toggleStatus(user._id, user.status.idle);
+    },
+    removed: function(user, fields) {
+      // console.log(user._id, '> just went offline');
+      gmaps.removeMarker(user._id);
+    }
+  });
+}
+
+Template.map.events({
+  'click .meet': function(event, template) {
+    event.preventDefault();
+    $('#map_canvas').toggleClass('open');
+    $('.results').toggleClass('open');
+  }
+});
+
+*/
