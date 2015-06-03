@@ -1,27 +1,33 @@
 Meteor.methods({
-  updateUsersPosition: function (position) {
-    // check(position.coords, Object);
-    // return Meteor.users.update({
-    //   _id: Meteor.userId()
-    // }, {
-    //   $set: {
-    //     position: position
-    //   }
-    // });
+  updateUsersPosition: function (userId, position) {
+    check(userId, String);
+    check(position, [Number]);
+    return Meteor.users.update({
+      _id: userId
+    }, {
+      $set: {
+        coordinates: position
+      }
+    });
   },
-  addRandomPerson: function () {
+  addRandomUser: function () {
     var aFakeUser = Fake.user({
       fields: ['username', 'email', 'fullname', 'emails.address', 'profile.name'],
     });
     aFakeUser.password = "1234";
-    var insertId = Accounts.createUser(aFakeUser);
-
-    Coordinates.insert({
-      userId: insertId,
-      coordinates: [
-        randomFromInterval(48.820, 48.900),
-        randomFromInterval(2.265, 2.4104)
-      ]
-    })
+    /*
+    aFakeUser.coordinates = this.randomCoordinatesParis();
+    aFakeUser.status = {
+      'online': true
+    }*/
+    Accounts.createUser(aFakeUser);
+  },
+  giveRandomCoordinatesParis: function () {
+    var coordinates = [
+      randomFromInterval(48.820, 48.900),
+      randomFromInterval(2.265, 2.4104)
+    ];
+    console.log(coordinates);
+    return coordinates;
   }
 });

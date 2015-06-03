@@ -1,28 +1,11 @@
 Template.map.onRendered(function () {
   Mapbox.load('minimap', 'markercluster', 'directions');
 
-  Tracker.autorun(function () {
+  var tick = function () {
     if (Mapbox.loaded()) {
       mapbox.initialize();
+      Meteor.clearInterval(mapboxTicker);
     }
-  });
+  };
+  var mapboxTicker = Meteor.setInterval(tick, 10);
 });
-
-
-/*
-function locationSuccess(position) {
-  // initialize map with current position and calculate the route
-  gmaps.initialize(position);
-
-
-}
-
-Template.map.events({
-  'click .meet': function(event, template) {
-    event.preventDefault();
-    $('#map_canvas').toggleClass('open');
-    $('.results').toggleClass('open');
-  }
-});
-
-*/
