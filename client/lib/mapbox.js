@@ -122,7 +122,7 @@ mapbox = {
       }
     });
     this.setStatus(marker, document.status.idle);
-    marker.bindPopup(document.username).on('click', function (evt) {
+    marker.bindPopup('<h2>' + document.username + '</h2><button class="button" data-action="meet">Meet</button>').on('click', function (evt) {
       console.log(this.options.data._id);
     });
     marker.addTo(this.map);
