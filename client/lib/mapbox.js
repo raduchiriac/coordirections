@@ -1,3 +1,4 @@
+/*
 mapbox = {
   // map object
   map: null,
@@ -108,7 +109,6 @@ mapbox = {
     });
     return false;
   },
-  */
 
   setStatus: function (marker, idle) {
     marker.setIcon(!idle ? this.defaultActiveIcon : this.defaultIdleIcon);
@@ -181,6 +181,12 @@ mapbox = {
     }
     this.navigatorWatchPositionHandler = navigator.geolocation.watchPosition(this.locationFound, this.locationError, watchOptions);
 
+    this.directions = L.mapbox.directions();
+    this.directionsLayer = L.mapbox.directions.layer(this.directions).addTo(this.map);
+    this.directionsInputControl = L.mapbox.directions.inputControl('inputs', this.directions).addTo(this.map);
+    this.directionsErrorsControl = L.mapbox.directions.errorsControl('errors', this.directions).addTo(this.map);
+    this.directionsRoutesControl = L.mapbox.directions.routesControl('routes', this.directions).addTo(this.map);
+    this.directionsInstructionsControl = L.mapbox.directions.instructionsControl('instructions', this.directions).addTo(this.map);
     this.observe();
     Session.set('mapbox', true);
     return true;
@@ -228,4 +234,4 @@ mapbox = {
       }
     });
   }
-}
+}*/

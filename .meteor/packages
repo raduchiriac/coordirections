@@ -31,3 +31,6 @@ u2622:persistent-session
 pauloborges:mapbox
 reywood:publish-composite
 dburles:collection-helpers
+dburles:google-maps
+mdg:geolocation
+grigio:babel

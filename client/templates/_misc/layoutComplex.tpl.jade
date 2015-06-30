@@ -5,10 +5,13 @@
         .bar.bar-header.bar-dark
           h1.title Left Menu
         .content.has-header
-          .list
-            .item.item-icon-right(data-ion-menu-close)
-              | Name
+          +ionList
+            +ionItem(class="item-icon-right")
               +ionIcon(icon="ios-arrow-right")
+              | Profile
+            +ionItem(class="item-icon-right")
+              +ionIcon(icon="ios-arrow-right")
+              | Help
     +ionSideMenuContent
       +ionNavBar(class="bar-positive")
       +ionNavView
@@ -18,4 +21,5 @@
         +ionView
           +ionContent
             +yield
-      +yield("footer")
+      +ionFooterBar(class="bar-dark")
+        +yield("footer")

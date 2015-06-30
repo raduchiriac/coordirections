@@ -1,4 +1,4 @@
-Template.map.onRendered(function () {
+Template.mapbox.onRendered(function () {
   Mapbox.load('minimap', 'markercluster', 'directions');
 
   var tick = function () {
