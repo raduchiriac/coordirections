@@ -74,6 +74,7 @@ gmaps = {
       },
       title: "Current position"
     });
+    this.observe();
   },
 
   // location watch Success
