@@ -1,3 +1,4 @@
+/*
 gmaps = {
   // map object
   map: null,
@@ -76,6 +77,15 @@ gmaps = {
     });
     this.observe();
   },
+  getBox => () {
+    var bounds = GoogleMaps.maps.map.instance.getBounds();
+    var ne = bounds.getNorthEast();
+    var sw = bounds.getSouthWest();
+    Session.set('box', [
+      [sw.lat(), sw.lng()],
+      [ne.lat(), ne.lng()]
+    ]);
+  },
 
   // location watch Success
   locationFound(position) {},
@@ -109,3 +119,4 @@ gmaps = {
     });
   }
 }
+*/

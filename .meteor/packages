@@ -1,35 +1,49 @@
-# Meteor packages used by this project, one per line.
-#
-# 'meteor add' and 'meteor remove' will edit this file for you,
-# but you can also edit it by hand.
-
-meteor-platform
 accounts-password
-fourseven:scss
-iron:router
-zimme:iron-router-active
-anti:fake
-matb33:collection-hooks
-aldeed:collection2
-aldeed:autoform
-meteoric:ionic-sass
-meteoric:ionicons-sass
-meteoric:ionic
-meteoric:autoform-ionic
-useraccounts:ionic
-meteorhacks:subs-manager
 mizzao:user-status
-underscore
-http
+
+meteorhacks:subs-manager
+meteorhacks:fast-render
+# kadira:react-layout
+kadira:blaze-layout
+kadira:flow-router
+
+fourseven:scss
 mquandalle:jade
-accounts-base
-msavin:mongol
-alanning:roles
-multiply:iron-router-progress
-sacha:spin
-u2622:persistent-session
-reywood:publish-composite
-dburles:collection-helpers
+
 dburles:google-maps
 mdg:geolocation
-grigio:babel
+
+# matb33:collection-hooks
+# aldeed:collection2
+# aldeed:autoform
+# meteoric:ionic-sass
+# meteoric:ionicons-sass
+# meteoric:ionic
+# meteoric:autoform-ionic
+# useraccounts:ionic
+# underscore
+# http
+# accounts-base
+# msavin:mongol
+# alanning:roles
+# multiply:iron-router-progress
+# sacha:spin
+# u2622:persistent-session
+# reywood:publish-composite
+# dburles:collection-helpers
+
+# ---------------------- meteor 1.2.0.1 -----------------------------
+standard-minifiers
+meteor-base
+mobile-experience
+mongo
+blaze-html-templates
+session
+jquery
+tracker
+logging
+reload
+random
+ejson
+spacebars
+check
