@@ -1,1 +1,3 @@
-BlazeLayout.setRoot('body');
+Meteor.startup(function () {
+  BlazeLayout.setRoot('body');
+});

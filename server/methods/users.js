@@ -11,23 +11,16 @@ Meteor.methods({
     // });
   },
   addRandomUser: function () {
-    // var aFakeUser = Fake.user({
-    //   fields: ['username', 'email', 'fullname', 'emails.address', 'profile.name'],
-    // });
-    // aFakeUser.password = "1234";
-    /*
-    aFakeUser.coordinates = this.randomCoordinatesParis();
-    aFakeUser.status = {
-      'online': true
-    }*/
-    // Accounts.createUser(aFakeUser);
+    var aFakeUser = Fake.user({
+      fields: ['username', 'email', 'fullname', 'emails.address', 'profile.name'],
+    });
+    aFakeUser.password = "123123";
+    Accounts.createUser(aFakeUser);
   },
-  giveRandomCoordinatesParis: function () {
-    // var coordinates = [
-    //   randomFromInterval(48.820, 48.900),
-    //   randomFromInterval(2.265, 2.4104)
-    // ];
-    // console.log(coordinates);
-    // return coordinates;
+  giveRandomCoordinates_Paris: function () {
+    return {
+      lat: randomFromInterval(48.82000001, 48.90000001),
+      lng: randomFromInterval(2.26500001, 2.41040001),
+    };
   }
 });

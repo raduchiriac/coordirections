@@ -1,10 +1,11 @@
-/*
+"use strinct";
+
 gmaps = {
   // map object
   map: null,
 
-  // markers array
-  markers: [],
+  // markers object
+  markers: {},
 
   // observer that watches for collection changes.
   // user observer.stop() to stop the Tracker
@@ -43,69 +44,103 @@ gmaps = {
 
   insertConnection() {},
 
-  // calculate and move the bound box based on our markers
-  calcBounds() {},
-
   // check if a marker already exists
   markerExists(key, val) {},
 
   setStatus() {},
 
   // add a marker
-  addMarker(document) {},
+  addMarker(document) {
+    var marker = new google.maps.Marker({
+      animation: google.maps.Animation.DROP,
+      position: new google.maps.LatLng(document.location.coordinates.lat, document.location.coordinates.lng),
+      map: this.map,
+      id: document._id
+    });
+    this.markers[document._id] = marker;
+  },
 
   // update marker
-  changeMarker(id, coordinates, status) {},
+  changeMarker(id, coordinates) {},
 
   // remove marker
-  removeMarker(id) {},
+  removeMarker(document) {
+    this.markers[document._id].setMap(null);
+    delete this.markers[document._id];
+  },
 
   // intialize the map
   initialize(map) {
-    let currentPosition = map.options.center;
+    "use strict";
+    let currentPosition = map.options.center,
+      watchOptions = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
 
-    this.map = map.instance
+    this.map = map.instance;
     this.currentMarker = new google.maps.Marker({
       position: currentPosition,
       map: this.map,
       icon: {
         path: google.maps.SymbolPath.CIRCLE,
         strokeColor: gmaps_theme.marker_color,
-        scale: 14
+        scale: 10
       },
-      title: "Current position"
     });
+    this.navigatorWatchPositionHandler = navigator.geolocation.watchPosition(this.locationFound, this.locationError, watchOptions);
+    this.addEvents();
+    this.calculateBounds();
     this.observe();
   },
-  getBox => () {
-    var bounds = GoogleMaps.maps.map.instance.getBounds();
+
+  addEvents() {
+    this.map.addListener('bounds_changed', function () {
+      gmaps.calculateBounds();
+    });
+  },
+
+  calculateBounds() {
+    var bounds = this.map.getBounds();
     var ne = bounds.getNorthEast();
     var sw = bounds.getSouthWest();
-    Session.set('box', [
+    bounds = [
       [sw.lat(), sw.lng()],
       [ne.lat(), ne.lng()]
-    ]);
+    ];
+    Session.set('box', bounds);
+    return bounds;
   },
 
   // location watch Success
-  locationFound(position) {},
+  locationFound(position) {
+    var currentPosition = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    };
+    if (gmaps.currentMarker) {
+      gmaps.currentMarker.setPosition(currentPosition);
+      // Meteor.call('updateUsersPosition', Meteor.user()._id, currentPosition);
+    }
+  },
 
   // location watch Error
   locationError() {
-    console.log('> Position could not be found');
+    // console.log('> Position could not be found');
   },
 
   // observe collection Coordinates for changes
   observe() {
-    var usersQuery = Meteor.users.find({
+    var usersQuery = Users.find({
       "_id": {
         $ne: Meteor.userId()
       }
-    })
+    });
     this.observer = usersQuery.observe({
       added: function (document) {
         // console.log(document, '> just came online');
-        if (!!document.coordinates) {
+        if (!!document.location.coordinates) {
           gmaps.addMarker(document);
         }
       },
@@ -114,9 +149,8 @@ gmaps = {
       },
       removed: function (oldDocument) {
         // console.log(oldDocument, '> just went offline');
-        gmaps.removeMarker(oldDocument._id);
+        gmaps.removeMarker(oldDocument);
       }
     });
   }
 }
-*/

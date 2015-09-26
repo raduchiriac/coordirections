@@ -1,19 +1,13 @@
 Meteor.publish("usersInBounds", function (box) {
-  return Meteor.users.find({
-    "status.online": true,
-    location: {
+  var selector = {
+    // "status.online": true,
+    "location.coordinates": {
       $geoWithin: {
         $box: box
       }
     }
-  }, {
-    // fields: {
-    //   username: 1,
-    //   'status.online': 1,
-    //   'coordinates.lat': 1,
-    //   'coordinates.lng': 1,
-    // }
-  });
+  };
+  return Users.find(selector);
 });
 
 // Meteor.publish("mongoConnectionsTowardsMe", function () {

@@ -1,5 +1,6 @@
 accounts-password
 mizzao:user-status
+# alanning:roles
 
 meteorhacks:subs-manager
 meteorhacks:fast-render
@@ -13,24 +14,17 @@ mquandalle:jade
 dburles:google-maps
 mdg:geolocation
 
-# matb33:collection-hooks
-# aldeed:collection2
-# aldeed:autoform
-# meteoric:ionic-sass
-# meteoric:ionicons-sass
-# meteoric:ionic
-# meteoric:autoform-ionic
-# useraccounts:ionic
-# underscore
-# http
-# accounts-base
-# msavin:mongol
-# alanning:roles
-# multiply:iron-router-progress
-# sacha:spin
-# u2622:persistent-session
-# reywood:publish-composite
-# dburles:collection-helpers
+anti:fake
+
+# materialize:materialize
+useraccounts:materialize
+
+aldeed:simple-schema
+aldeed:collection2
+matb33:collection-hooks
+dburles:collection-helpers
+
+react
 
 # ---------------------- meteor 1.2.0.1 -----------------------------
 standard-minifiers
