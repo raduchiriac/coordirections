@@ -4,29 +4,35 @@ mizzao:user-status
 
 meteorhacks:subs-manager
 meteorhacks:fast-render
-# kadira:react-layout
+useraccounts:flow-routing
+arillo:flow-router-helpers
 kadira:blaze-layout
 kadira:flow-router
+# kadira:flow-router-ssr
+# meteorhacks:flow-components
+# tomwasd:flow-router-seo
+# cottz:flow-router-auth
 
 fourseven:scss
 mquandalle:jade
 
-dburles:google-maps
 mdg:geolocation
+dburles:google-maps
 
 anti:fake
 
 # materialize:materialize
 useraccounts:materialize
 
-aldeed:simple-schema
-aldeed:collection2
-matb33:collection-hooks
-dburles:collection-helpers
+# aldeed:simple-schema
+# aldeed:collection2
+# matb33:collection-hooks
+# dburles:collection-helpers
 
 react
+kadira:react-layout
 
-# ---------------------- meteor 1.2.0.1 -----------------------------
+# ---------------------- meteor 1.2.0.1 --------------------------- #
 standard-minifiers
 meteor-base
 mobile-experience
