@@ -1,7 +1,7 @@
 Accounts.onCreateUser(function (options, user) {
   user.location = {
     type: "Point",
-    coordinates: Meteor.call('giveRandomCoordinates_Paris')
+    coordinates: giveRandomCoordinates('Paris')
   };
   user.status = {
     'online': true

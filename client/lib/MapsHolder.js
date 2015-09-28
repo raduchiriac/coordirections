@@ -1,6 +1,6 @@
 "use strinct";
 
-gmaps = {
+MapsHolder = {
   // map object
   map: null,
 
@@ -85,7 +85,7 @@ gmaps = {
       map: this.map,
       icon: {
         path: google.maps.SymbolPath.CIRCLE,
-        strokeColor: gmaps_theme.marker_color,
+        strokeColor: CONST_DATA.MapsHolder.marker_color,
         scale: 10
       },
     });
@@ -97,7 +97,7 @@ gmaps = {
 
   addEvents() {
     this.map.addListener('bounds_changed', function () {
-      gmaps.calculateBounds();
+      MapsHolder.calculateBounds();
     });
   },
 
@@ -119,8 +119,8 @@ gmaps = {
       lat: position.coords.latitude,
       lng: position.coords.longitude
     };
-    if (gmaps.currentMarker) {
-      gmaps.currentMarker.setPosition(currentPosition);
+    if (!!MapsHolder.currentMarker) {
+      MapsHolder.currentMarker.setPosition(currentPosition);
       // Meteor.call('updateUsersPosition', Meteor.user()._id, currentPosition);
     }
   },
@@ -141,16 +141,16 @@ gmaps = {
       added: function (document) {
         // console.log(document, '> just came online');
         if (!!document.location.coordinates) {
-          gmaps.addMarker(document);
+          MapsHolder.addMarker(document);
         }
       },
       changed: function (newDocument, oldDocument) {
-        gmaps.changeMarker(newDocument._id, newDocument.coordinates, newDocument.status);
+        MapsHolder.changeMarker(newDocument._id, newDocument.coordinates, newDocument.status);
       },
       removed: function (oldDocument) {
         // console.log(oldDocument, '> just went offline');
-        gmaps.removeMarker(oldDocument);
+        MapsHolder.removeMarker(oldDocument);
       }
     });
   }
-}
+};

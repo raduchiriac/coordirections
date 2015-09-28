@@ -5,5 +5,5 @@ html, body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
-@import "client/components/gmaps/gmaps.scss";
-@import "client/components/react/react.scss";
+@import "client/components/ReactGoogleMaps/ReactGoogleMaps.scss";
+@import "client/views/loading.scss";

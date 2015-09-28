@@ -2,11 +2,15 @@ accounts-password
 mizzao:user-status
 # alanning:roles
 
+kadira:blaze-layout
+react
+kadira:react-layout
+# timbrandin:sideburns
+
 meteorhacks:subs-manager
 meteorhacks:fast-render
 useraccounts:flow-routing
 arillo:flow-router-helpers
-kadira:blaze-layout
 kadira:flow-router
 # kadira:flow-router-ssr
 # meteorhacks:flow-components
@@ -21,6 +25,9 @@ dburles:google-maps
 
 anti:fake
 
+# audit-argument-checks
+# ongoworks:security
+
 # materialize:materialize
 useraccounts:materialize
 
@@ -28,9 +35,6 @@ useraccounts:materialize
 # aldeed:collection2
 # matb33:collection-hooks
 # dburles:collection-helpers
-
-react
-kadira:react-layout
 
 # ---------------------- meteor 1.2.0.1 --------------------------- #
 standard-minifiers
