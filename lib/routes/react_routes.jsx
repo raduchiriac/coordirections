@@ -1,6 +1,6 @@
 FlowRouter.triggers.enter([AccountsTemplates.ensureSignedIn]);
 FlowRouter.route('/', {
-  name: 'react',
+  name: 'ReactGoogleMaps',
   action: function () {
     GoogleMaps.load();
     ReactLayout.render(reactMainLayout, {

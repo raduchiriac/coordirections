@@ -29,6 +29,7 @@ anti:fake
 # ongoworks:security
 
 # materialize:materialize
+poetic:materialize-scss
 useraccounts:materialize
 
 # aldeed:simple-schema
