@@ -1,5 +1,8 @@
 Meteor.publish("usersInBounds", function (box) {
   var selector = {
+    "_id": {
+      $ne: this.userId
+    },
     // "status.online": true,
     "location.coordinates": {
       $geoWithin: {

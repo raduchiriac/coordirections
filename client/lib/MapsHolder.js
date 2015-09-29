@@ -50,23 +50,25 @@ MapsHolder = {
   setStatus() {},
 
   // add a marker
-  addMarker(document) {
+  addMarker(doc) {
     var marker = new google.maps.Marker({
       animation: google.maps.Animation.DROP,
-      position: new google.maps.LatLng(document.location.coordinates.lat, document.location.coordinates.lng),
+      position: new google.maps.LatLng(doc.location.coordinates.lat, doc.location.coordinates.lng),
       map: this.map,
-      id: document._id
+      id: doc._id
     });
-    this.markers[document._id] = marker;
+    this.markers[doc._id] = marker;
   },
 
   // update marker
-  changeMarker(id, coordinates) {},
+  changeMarker(doc) {
+    this.markers[doc._id].setPosition(new google.maps.LatLng(doc.location.coordinates.lat, doc.location.coordinates.lng));
+  },
 
   // remove marker
-  removeMarker(document) {
-    this.markers[document._id].setMap(null);
-    delete this.markers[document._id];
+  removeMarker(doc) {
+    this.markers[doc._id].setMap(null);
+    delete this.markers[doc._id];
   },
 
   // intialize the map
@@ -121,7 +123,7 @@ MapsHolder = {
     };
     if (!!MapsHolder.currentMarker) {
       MapsHolder.currentMarker.setPosition(currentPosition);
-      // Meteor.call('updateUsersPosition', Meteor.user()._id, currentPosition);
+      Meteor.call('updateUsersPosition', Meteor.userId(), currentPosition);
     }
   },
 
@@ -138,18 +140,16 @@ MapsHolder = {
       }
     });
     this.observer = usersQuery.observe({
-      added: function (document) {
-        // console.log(document, '> just came online');
-        if (!!document.location.coordinates) {
-          MapsHolder.addMarker(document);
+      added: function (doc) {
+        if (!!doc.location.coordinates) {
+          MapsHolder.addMarker(doc);
         }
       },
-      changed: function (newDocument, oldDocument) {
-        MapsHolder.changeMarker(newDocument._id, newDocument.coordinates, newDocument.status);
+      changed: function (newdoc, olddoc) {
+        MapsHolder.changeMarker(newdoc);
       },
-      removed: function (oldDocument) {
-        // console.log(oldDocument, '> just went offline');
-        MapsHolder.removeMarker(oldDocument);
+      removed: function (olddoc) {
+        MapsHolder.removeMarker(olddoc);
       }
     });
   }
