@@ -85,11 +85,8 @@ MapsHolder = {
     this.currentMarker = new google.maps.Marker({
       position: currentPosition,
       map: this.map,
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        strokeColor: CONST_DATA.MapsHolder.marker_color,
-        scale: 10
-      },
+      icon: new google.maps.MarkerImage('/img/maps/current.svg',
+        null, null, null, new google.maps.Size(64, 64)),
     });
     this.navigatorWatchPositionHandler = navigator.geolocation.watchPosition(this.locationFound, this.locationError, watchOptions);
     this.addEvents();

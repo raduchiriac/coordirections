@@ -3,14 +3,21 @@ Meteor.publish("usersInBounds", function (box) {
     "_id": {
       $ne: this.userId
     },
-    // "status.online": true,
+    "status.online": true,
     "location.coordinates": {
       $geoWithin: {
         $box: box
       }
     }
   };
-  return Users.find(selector);
+  var options = {
+    fields: {
+      'location.coordinates': 1,
+      'status': 1,
+      'username': 1
+    }
+  };
+  return Users.find(selector, options);
 });
 
 // Meteor.publish("mongoConnectionsTowardsMe", function () {
