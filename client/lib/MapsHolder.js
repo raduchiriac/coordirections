@@ -1,5 +1,3 @@
-"use strinct";
-
 MapsHolder = {
   // map object
   map: null,
@@ -38,19 +36,19 @@ MapsHolder = {
   // bounds of your map
   mapBounds: null,
 
-  calculateRoute(position, callback) {},
+  // calculateRoute(position, callback) {},
 
-  removeRoute(username) {},
+  // removeRoute(username) {},
 
-  insertConnection() {},
+  // insertConnection() {},
 
   // check if a marker already exists
-  markerExists(key, val) {},
+  // markerExists(key, val) {},
 
-  setStatus() {},
+  // setStatus() {},
 
   // add a marker
-  addMarker(doc) {
+  addMarker: function (doc) {
     var marker = new google.maps.Marker({
       animation: google.maps.Animation.DROP,
       position: new google.maps.LatLng(doc.location.coordinates.lat, doc.location.coordinates.lng),
@@ -61,20 +59,19 @@ MapsHolder = {
   },
 
   // update marker
-  changeMarker(doc) {
+  changeMarker: function (doc) {
     this.markers[doc._id].setPosition(new google.maps.LatLng(doc.location.coordinates.lat, doc.location.coordinates.lng));
   },
 
   // remove marker
-  removeMarker(doc) {
+  removeMarker: function (doc) {
     this.markers[doc._id].setMap(null);
     delete this.markers[doc._id];
   },
 
   // intialize the map
-  initialize(map) {
-    "use strict";
-    let currentPosition = map.options.center,
+  initialize: function (map) {
+    var currentPosition = map.options.center,
       watchOptions = {
         enableHighAccuracy: true,
         timeout: 5000,
@@ -94,13 +91,13 @@ MapsHolder = {
     this.observe();
   },
 
-  addEvents() {
+  addEvents: function () {
     this.map.addListener('bounds_changed', function () {
       MapsHolder.calculateBounds();
     });
   },
 
-  calculateBounds() {
+  calculateBounds: function () {
     var bounds = this.map.getBounds();
     var ne = bounds.getNorthEast();
     var sw = bounds.getSouthWest();
@@ -113,7 +110,7 @@ MapsHolder = {
   },
 
   // location watch Success
-  locationFound(position) {
+  locationFound: function (position) {
     var currentPosition = {
       lat: position.coords.latitude,
       lng: position.coords.longitude
@@ -125,12 +122,12 @@ MapsHolder = {
   },
 
   // location watch Error
-  locationError() {
-    // console.log('> Position could not be found');
+  locationError: function () {
+    console.log('> Position could not be found');
   },
 
   // observe collection Coordinates for changes
-  observe() {
+  observe: function () {
     var usersQuery = Users.find({
       "_id": {
         $ne: Meteor.userId()
